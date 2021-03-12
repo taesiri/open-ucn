@@ -28,6 +28,7 @@ import lib.util_2d as util_2d
 from lib.eval import find_nn_gpu
 from util.file import ensure_dir
 
+from PIL import Image
 
 def visualize_image_correspondence(img0,
                                    img1,
@@ -56,8 +57,8 @@ def visualize_image_correspondence(img0,
     x0, y0 = None, None
     x1, y1 = None, None
 
-  H0, W0 = img0.shape
-  H1, W1 = img1.shape
+  H0, W0, _ = img0.shape
+  H1, W1, _ = img1.shape
   if mode == 'cpu-keypoints':
     matches1 = util_2d.feature_match(
         F0[:, y0, x0].t().cpu().numpy(),
@@ -194,11 +195,15 @@ def visualize_image_correspondence(img0,
   fig = plt.gcf()
   fig.set_size_inches(9, 6)
 
-  ax0.imshow(img0 * 0.5, vmin=0, vmax=255, cmap='gray')
+  im0_pil = Image.fromarray(cv2.cvtColor(img0, cv2.COLOR_BGR2RGB))
+
+  ax0.imshow(im0_pil)
   ax0.scatter(x=x0[mask], y=y0[mask], c=color, s=2, cmap="jet")
   ax0.axis('off')
 
-  ax1.imshow(img1 * 0.5, vmin=0, vmax=255, cmap='gray')
+  im1_pil = Image.fromarray(cv2.cvtColor(img1, cv2.COLOR_BGR2RGB))
+
+  ax1.imshow(im1_pil)
   ax1.scatter(x=xs1[mask], y=ys1[mask], c=color, s=2, cmap="jet")
   ax1.axis('off')
 

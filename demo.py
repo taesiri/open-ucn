@@ -41,22 +41,29 @@ if not osp.isfile('ResUNetBN2D2-YFCC100train.pth'):
       'ResUNetBN2D2-YFCC100train.pth')
 
 imgs = [
-    '00193173_7195353638.jpg',
-    '01058134_62294335.jpg',
-    '01462567_5517704156.jpg',
-    '01712771_5951658395.jpg',
-    '02097228_5107530228.jpg',
-    '04240457_5644708528.jpg',
-    '04699926_7516162558.jpg',
-    '05140127_5382246386.jpg',
-    '05241723_5891594881.jpg',
-    '06903912_8664514294.jpg',
+    "1.png",
+    "2.png",
+    "3.png",
+    #'00193173_7195353638.jpg',
+    #'01058134_62294335.jpg',
+    # '01462567_5517704156.jpg',
+    # '01712771_5951658395.jpg',
+    # '02097228_5107530228.jpg',
+    # '04240457_5644708528.jpg',
+    # '04699926_7516162558.jpg',
+    # '05140127_5382246386.jpg',
+    # '05241723_5891594881.jpg',
+    # '06903912_8664514294.jpg',
 ]
 
 
 def prep_image(full_path):
   assert osp.exists(full_path), f"File {full_path} does not exist."
   return cv2.imread(full_path, cv2.IMREAD_GRAYSCALE)
+
+def colored_image(full_path):
+  assert osp.exists(full_path), f"File {full_path} does not exist."
+  return cv2.imread(full_path)
 
 
 def to_normalized_torch(img, device):
@@ -81,6 +88,9 @@ def demo(config):
   for i, (img0_path, img1_path) in enumerate(itertools.combinations(imgs, 2)):
     img0 = prep_image(osp.join(root, img0_path))
     img1 = prep_image(osp.join(root, img1_path))
+    
+    #colored_image = 
+    
     if config.scale is not None:
       img0 = cv2.resize(img0, dsize=None, fx=config.scale, fy=config.scale)
       img1 = cv2.resize(img1, dsize=None, fx=config.scale, fy=config.scale)
@@ -88,7 +98,9 @@ def demo(config):
     F1 = model(to_normalized_torch(img1, device))
 
     visualize_image_correspondence(
-        img0, img1, F0[0], F1[0], i, mode='gpu-all', config=config)
+        colored_image(osp.join(root, img0_path)), 
+        colored_image(osp.join(root, img1_path)), 
+        F0[0], F1[0], i, mode='gpu-all', config=config)
 
 
 if __name__ == '__main__':
@@ -100,7 +112,7 @@ if __name__ == '__main__':
       help='Path to pretrained weights')
   parser.add_argument(
       '--nn_max_n',
-      default=25,
+      default=20,
       type=int,
       help='Number of maximum points for nearest neighbor search.')
   parser.add_argument(
