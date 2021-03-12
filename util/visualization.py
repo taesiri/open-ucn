@@ -209,4 +209,6 @@ def visualize_image_correspondence(img0,
 
   fig.tight_layout()
   ensure_dir('./ucn_outputs')
-  plt.savefig(f"./ucn_outputs/{filename:03d}.png", dpi=300)
+  #plt.savefig(f"./ucn_outputs/{filename:03d}.png", dpi=300)
+  
+  return fig
