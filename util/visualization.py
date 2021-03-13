@@ -48,7 +48,7 @@ def visualize_image_correspondence(img0,
     )
     kp0 = sift.detect(img0, None)
     kp1 = sift.detect(img1, None)
-    print(len(kp0), len(kp1))
+    #print(len(kp0), len(kp1))
     xy_kp0 = np.floor(np.array([k.pt for k in kp0]).T)
     xy_kp1 = np.floor(np.array([k.pt for k in kp1]).T)
     x0, y0 = xy_kp0[0], xy_kp0[1]
